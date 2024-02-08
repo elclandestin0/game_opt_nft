@@ -1,19 +1,20 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155MetadataURI.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-contract RandomArtNFT is ERC721URIStorage, Ownable {
+contract SharpshooterPass is ERC1155MetadataURI, Ownable {
     using Strings for uint256;
     using ECDSA for bytes32;
 
-    address private signerAddress;
+    string public name = "SharpshooterPass";
+    string public symbol = "SHARP";
 
-    constructor(address _signer) ERC721("RandomArtNFT", "RANFT") {
-        signerAddress = _signer;
+    constructor(address _signer) ERC1155("") {
+        setSignerAddress(_signer);
     }
 
     function setSignerAddress(address _newSigner) external onlyOwner {
