@@ -706,6 +706,14 @@
     "@sentry/types" "5.30.0"
     tslib "^1.9.3"
 
+"@typechain/ethers-v5@^11.1.2":
+  version "11.1.2"
+  resolved "https://registry.yarnpkg.com/@typechain/ethers-v5/-/ethers-v5-11.1.2.tgz#82510c1744f37a2f906b9e0532ac18c0b74ffe69"
+  integrity sha512-ID6pqWkao54EuUQa0P5RgjvfA3MYqxUQKpbGKERbsjBW5Ra7EIXvbMlPp2pcP5IAdUkyMCFYsP2SN5q7mPdLDQ==
+  dependencies:
+    lodash "^4.17.15"
+    ts-essentials "^7.0.1"
+
 "@types/bn.js@^4.11.3":
   version "4.11.6"
   resolved "https://registry.yarnpkg.com/@types/bn.js/-/bn.js-4.11.6.tgz#c306c70d9358aaea33cd4eda092a742b9505967c"
@@ -1200,6 +1208,11 @@ diff@5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/diff/-/diff-5.0.0.tgz#7ed6ad76d859d030787ec35855f5b1daf31d852b"
   integrity sha512-/VTCrvm5Z0JGty/BWHljh+BAiw3IK+2j87NGMu8Nwc/f48WoDAC395uomO9ZD117ZOBaHmkX1oyLvkVM/aIT3w==
+
+dotenv@^16.4.1:
+  version "16.4.1"
+  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-16.4.1.tgz#1d9931f1d3e5d2959350d1250efab299561f7f11"
+  integrity sha512-CjA3y+Dr3FyFDOAMnxZEGtnW9KBR2M0JvvUtXNW+dYJL5ROWxP9DUHCwgFqpMk0OXCc0ljhaNTr2w/kutYIcHQ==
 
 elliptic@6.5.4, elliptic@^6.5.2, elliptic@^6.5.4:
   version "6.5.4"
@@ -1759,7 +1772,7 @@ locate-path@^6.0.0:
   dependencies:
     p-locate "^5.0.0"
 
-lodash@^4.17.11:
+lodash@^4.17.11, lodash@^4.17.15:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -2270,6 +2283,11 @@ toidentifier@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.1.tgz#3be34321a88a820ed1bd80dfaa33e479fbb8dd35"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
+
+ts-essentials@^7.0.1:
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-7.0.3.tgz#686fd155a02133eedcc5362dc8b5056cde3e5a38"
+  integrity sha512-8+gr5+lqO3G84KdiTSMRLtuyJ+nTBVRKuCrK4lidMPdVeEp0uqC875uE5NMcaA7YYMN7XsNiFQuMvasF8HT/xQ==
 
 tslib@^1.9.3:
   version "1.14.1"

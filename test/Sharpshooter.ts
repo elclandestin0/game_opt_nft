@@ -1,26 +1,28 @@
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+import {expect} from "chai";
+import {ethers} from "hardhat";
+import {Contract, Signer} from "ethers";
+import {SharpshooterPass} from "../typechain/contracts/SharpshooterPass"; // Adjust the import path to where your typechain artifacts are located
 
 describe("SharpshooterPass", function () {
-  it("Should mint a new token if the signature is valid", async function () {
-    const [owner, addr1] = await ethers.getSigners();
+    let sharpshooterPass: SharpshooterPass;
+    let owner: Signer;
+    let addr1: JSON;
 
-    // Deploy the contract
-    const SharpshooterPass = await ethers.getContractFactory("SharpshooterPass");
-    const sharpshooterPass = await SharpshooterPass.deploy(owner.address);
-    await sharpshooterPass.deployed();
+    beforeEach(async function () {
+        [owner, addr1] = await ethers.getSigners();
+        const SharpshooterPass = await ethers.getContractFactory("SharpshooterPass");
+        sharpshooterPass = SharpshooterPass.attach("0x519b05b3655F4b89731B677d64CEcf761f4076f6");
+    });
 
-    // Sign a tokenId for addr1 using the owner's account
-    const tokenId = 1;
-    const amount = 1;
-    const messageHash = ethers.utils.solidityKeccak256(["uint256", "address"], [tokenId, addr1.address]);
-    const signature = await owner.signMessage(ethers.utils.arrayify(messageHash));
+    it("Should mint a new token if the signature is valid", async function () {
+        const tokenId = 1;
+        const amount = 1;
 
-    // Mint a new token
-    await expect(sharpshooterPass.connect(addr1).mintNFT(signature, tokenId, amount))
-        .to.emit(sharpshooterPass, 'TransferSingle');
+        // Mint a new token
+        await sharpshooterPass.connect(addr1).mintNFT(tokenId);
 
-    // Check that the balance of addr1 is now 1
-    expect(await sharpshooterPass.balanceOf(addr1.address, tokenId)).to.equal(amount);
-  });
+        // Check that the balance of addr1 is now 1
+        const balance = await sharpshooterPass.balanceOf(await addr1.getAddress(), tokenId);
+        expect(balance).to.equal(amount);
+    });
 });

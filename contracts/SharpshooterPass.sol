@@ -1,40 +1,34 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155MetadataURI.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "hardhat/console.sol";
 
-contract SharpshooterPass is ERC1155MetadataURI, Ownable {
+contract SharpshooterPass is ERC1155, Ownable {
     using Strings for uint256;
     using ECDSA for bytes32;
 
     string public name = "SharpshooterPass";
     string public symbol = "SHARP";
 
-    constructor(address _signer) ERC1155("") {
-        setSignerAddress(_signer);
+    // note: this is just for the early round of testing
+    address public mainSignerAddress;
+
+    constructor(address initialOwner) ERC1155("") Ownable(initialOwner) {
+        mainSignerAddress = initialOwner;
     }
 
-    function setSignerAddress(address _newSigner) external onlyOwner {
-        signerAddress = _newSigner;
-    }
+    function mintNFT(uint256 tokenId) public {
+        // To-Do: Verify if th person has the proof later
 
-    function mintNFT(bytes memory signature, uint256 tokenId) public {
-        require(_verify(signature, tokenId, msg.sender), "Invalid proof");
+        // Generate the art and URI later
+        string memory tokenURI = "";
 
-        // Generate the art and URI
-        string memory tokenURI = _generateArt(tokenId);
-
-        _safeMint(msg.sender, tokenId);
-        _setTokenURI(tokenId, tokenURI);
-    }
-
-    function _verify(bytes memory signature, uint256 tokenId, address account) internal view returns (bool) {
-        bytes32 hash = keccak256(abi.encodePacked(tokenId, account));
-        bytes32 ethSignedHash = hash.toEthSignedMessageHash();
-        return ethSignedHash.recover(signature) == signerAddress;
+        _mint(msg.sender, tokenId, 1, "");
+        _setURI(tokenURI);
     }
 
     function _generateArt(uint256 tokenId) internal view returns (string memory) {
@@ -42,10 +36,14 @@ contract SharpshooterPass is ERC1155MetadataURI, Ownable {
         uint256 seed = uint256(keccak256(abi.encodePacked(block.timestamp, msg.sender, tokenId)));
         string memory svg = '<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320">';
 
-        for (uint i = 0; i < 32; i++) {
-            for (uint j = 0; j < 32; j++) {
-                uint256 colorValue = (uint256(keccak256(abi.encodePacked(seed, i, j))) % 16777215).toHexString(6);
-                svg = string(abi.encodePacked(svg, '<rect x="', i.mul(10).toString(), '" y="', j.mul(10).toString(), '" width="10" height="10" fill="#', colorValue, '"/>'));
+        for (uint256 i = 0; i < 32; i++) {
+            for (uint256 j = 0; j < 32; j++) {
+                // Generate color value and convert to string
+                string memory colorValue = _numberToColorHex((uint256(keccak256(abi.encodePacked(seed, i, j))) % 16777215), 6);
+                // Calculate position and size
+                uint256 x = i * 10;
+                uint256 y = j * 10;
+                svg = string(abi.encodePacked(svg, '<rect x="', x.toString(), '" y="', y.toString(), '" width="10" height="10" fill="#', colorValue, '"/>'));
             }
         }
 
@@ -56,10 +54,18 @@ contract SharpshooterPass is ERC1155MetadataURI, Ownable {
         return string(abi.encodePacked("data:image/svg+xml;base64,", base64EncodedSVG));
     }
 
-    // Implement _base64Encode(bytes memory data) to encode SVG data to base64
-    // This function is left as an exercise due to space constraints
+    function _numberToColorHex(uint256 number, uint256 length) private pure returns (string memory) {
+        bytes memory buffer = new bytes(length);
+        bytes16 hexCharacters = "0123456789abcdef"; // Use bytes16 for hex characters
+        for (uint256 i = length; i > 0; --i) {
+            buffer[i - 1] = hexCharacters[number & 0xf];
+            number >>= 4;
+        }
+        return string(buffer);
+    }
+
+    // implement later
     function _base64Encode(bytes memory data) internal pure returns (string memory) {
-        // Placeholder function for actual base64 encoding logic
         return "";
     }
 }

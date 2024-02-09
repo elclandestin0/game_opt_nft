@@ -1,27 +1,21 @@
-import { ethers } from "hardhat";
+import {ethers} from "hardhat";
 
 async function main() {
-  const currentTimestampInSeconds = Math.round(Date.now() / 1000);
-  const unlockTime = currentTimestampInSeconds + 60;
+  const [owner] = await ethers.getSigners();
+  console.log("Deploying contracts with the account:", owner.address);
 
-  const lockedAmount = ethers.parseEther("0.001");
+  // Deploy PolicyMaker
+  const SharpshooterPassFactory = await ethers.getContractFactory("SharpshooterPass");
+  const sharpshooter = await SharpshooterPassFactory.deploy(owner.address);
 
-  const lock = await ethers.deployContract("Lock", [unlockTime], {
-    value: lockedAmount,
-  });
-
-  await lock.waitForDeployment();
-
-  console.log(
-    `Lock with ${ethers.formatEther(
-      lockedAmount
-    )}ETH and unlock timestamp ${unlockTime} deployed to ${lock.target}`
-  );
+  // Wait for the contract to be deployed
+  await sharpshooter.waitForDeployment();
+  console.log("Policy Maker deployed to address:", sharpshooter.target);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+    .then(() => process.exit(0))
+    .catch((error) => {
+      console.error(error);
+      process.exit(1);
+    });
