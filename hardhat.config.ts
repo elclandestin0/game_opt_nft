@@ -8,52 +8,60 @@ import "@typechain/hardhat";
 
 const PRIVATE_KEY: string = process.env.PRIVATE_KEY || "";
 const API_KEY: string = process.env.INFURA_API_KEY || "";
+const SEPOLIA_RPC_URL: string = process.env.SEPOLIA_RPC_URL || ""; // Add your Sepolia RPC URL here
 
 
 const config: HardhatUserConfig = {
-  solidity: {
-    compilers: [
-      {
-        version: '0.8.20',
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 50
-          }
-        }
-      },
-      {
-        version: '0.4.24',
-        settings: {
-          optimizer: {
-            enabled: true,
-            runs: 50
-          }
-        }
-      }
-    ],
-  },
-  networks: {
-    hardhat: {
-      gas: 12000000,
-      blockGasLimit: 0x1fffffffffffff,
-      forking: {
-        url: `https://mainnet.infura.io/v3/${API_KEY}`,
-      },
-      allowUnlimitedContractSize: true
+    solidity: {
+        compilers: [
+            {
+                version: '0.8.20',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 50
+                    }
+                }
+            },
+            {
+                version: '0.4.24',
+                settings: {
+                    optimizer: {
+                        enabled: true,
+                        runs: 50
+                    }
+                }
+            }
+        ],
     },
-    localhost: {
-      gas: 12000000,
-      blockGasLimit: 0x1fffffffffffff,
-      url: "http://127.0.0.1:8545",
-      allowUnlimitedContractSize: true,
-      timeout: 1800000
+    networks: {
+        hardhat: {
+            gas: 12000000,
+            blockGasLimit: 0x1fffffffffffff,
+            forking: {
+                url: `https://mainnet.infura.io/v3/${API_KEY}`,
+            },
+            allowUnlimitedContractSize: true
+        },
+        localhost: {
+            gas: 12000000,
+            blockGasLimit: 0x1fffffffffffff,
+            url: "http://127.0.0.1:8545",
+            allowUnlimitedContractSize: true,
+            timeout: 1800000
+        },
+        sepolia: {
+            url: SEPOLIA_RPC_URL, // Use the RPC URL for Sepolia
+            accounts: PRIVATE_KEY !== "" ? [PRIVATE_KEY] : [], // Add your private key here
+            gas: 12000000,
+            blockGasLimit: 0x1fffffffffffff,
+            chainId: 11155111, // Sepolia chain ID
+        },
     },
-  },
-  typechain: {
-    outDir: "typechain",
-    target: "ethers-v5",
-  },
+    typechain: {
+        outDir: "typechain",
+        target: "ethers-v5",
+    },
 
 };
 

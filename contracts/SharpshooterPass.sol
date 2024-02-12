@@ -21,14 +21,22 @@ contract SharpshooterPass is ERC1155, Ownable {
         mainSignerAddress = initialOwner;
     }
 
-    function mintNFT(uint256 tokenId) public {
-        // To-Do: Verify if th person has the proof later
-
-        // Generate the art and URI later
+    function mintNFT(uint256 tokenId, bytes32 proof) public {
+        require(verifyNFTProof(tokenId, proof), "Invalid proof.");
         string memory tokenURI = "";
 
         _mint(msg.sender, tokenId, 1, "");
         _setURI(tokenURI);
+    }
+
+    function generateNFTProof(uint256 tokenId) public onlyOwner returns (bytes32) {
+        return keccak256(abi.encodePacked(tokenId));
+    }
+
+    // Function to verify the NFT proof
+    function verifyNFTProof(uint256 tokenId, bytes32 proof) public view returns (bool) {
+        bytes32 generatedProof = keccak256(abi.encodePacked(tokenId));
+        return generatedProof == proof;
     }
 
     function _generateArt(uint256 tokenId) internal view returns (string memory) {

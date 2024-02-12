@@ -11,7 +11,7 @@ describe("SharpshooterPass", function () {
     beforeEach(async function () {
         [owner, addr1] = await ethers.getSigners();
         const SharpshooterPass = await ethers.getContractFactory("SharpshooterPass");
-        sharpshooterPass = SharpshooterPass.attach("0x519b05b3655F4b89731B677d64CEcf761f4076f6");
+        sharpshooterPass = SharpshooterPass.attach("0x057cD3082EfED32d5C907801BF3628B27D88fD80");
     });
 
     it("Should mint a new token if the signature is valid", async function () {
@@ -19,8 +19,10 @@ describe("SharpshooterPass", function () {
         const amount = 1;
 
         // Mint a new token
-        await sharpshooterPass.connect(addr1).mintNFT(tokenId);
-
+        const proof = await sharpshooterPass.generateNFTProof(tokenId);
+        console.log(proof);
+        await expect(sharpshooterPass.mintNFT(tokenId, "")).to.be.revertedWith("Invalid proof.");
+        // expect(sharpshooterPass.mintNFT(tokenId, ));
         // Check that the balance of addr1 is now 1
         const balance = await sharpshooterPass.balanceOf(await addr1.getAddress(), tokenId);
         expect(balance).to.equal(amount);
