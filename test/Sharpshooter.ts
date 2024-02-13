@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {ethers} from "hardhat";
-import {BigNumber, Contract, Signer} from "ethers";
+import {Contract, Signer} from "ethers";
 import {SharpshooterPass} from "../typechain/contracts/SharpshooterPass"; // Adjust the import path to where your typechain artifacts are located
 
 describe("SharpshooterPass", function () {
@@ -11,11 +11,11 @@ describe("SharpshooterPass", function () {
     beforeEach(async function () {
         [owner, addr1] = await ethers.getSigners();
         const SharpshooterPass = await ethers.getContractFactory("SharpshooterPass");
-        sharpshooterPass = SharpshooterPass.attach("0xF357118EBd576f3C812c7875B1A1651a7f140E9C");
+        sharpshooterPass = SharpshooterPass.attach("0xf93b0549cD50c849D792f0eAE94A598fA77C7718");
     });
 
     it("Should mint a new token if the signature is valid", async function () {
-        const tokenId = 19;
+        const tokenId = 1;
         const amount = 1;
 
         const proof = ethers.ZeroHash;
@@ -25,9 +25,7 @@ describe("SharpshooterPass", function () {
         // tx with correct proof
         const correctProof = await sharpshooterPass.connect(owner).generateNFTProof(1);
         // Ensure the proof string is correctly prefixed with '0x'
-        const proofHexString = `0x${correctProof}`;
-        console.log(correctProof);
-        const isValidProof = await sharpshooterPass.verifyNFTProof(tokenId, proofHexString);
+        const isValidProof = await sharpshooterPass.verifyNFTProof(tokenId, correctProof);
         expect(isValidProof).to.be.true;
         // expect(balance).to.equal(amount);
     });
