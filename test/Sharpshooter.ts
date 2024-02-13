@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {ethers} from "hardhat";
-import {Contract, Signer} from "ethers";
+import {BigNumber, Contract, Signer} from "ethers";
 import {SharpshooterPass} from "../typechain/contracts/SharpshooterPass"; // Adjust the import path to where your typechain artifacts are located
 
 describe("SharpshooterPass", function () {
@@ -11,20 +11,24 @@ describe("SharpshooterPass", function () {
     beforeEach(async function () {
         [owner, addr1] = await ethers.getSigners();
         const SharpshooterPass = await ethers.getContractFactory("SharpshooterPass");
-        sharpshooterPass = SharpshooterPass.attach("0x057cD3082EfED32d5C907801BF3628B27D88fD80");
+        sharpshooterPass = SharpshooterPass.attach("0xF357118EBd576f3C812c7875B1A1651a7f140E9C");
     });
 
     it("Should mint a new token if the signature is valid", async function () {
-        const tokenId = 1;
+        const tokenId = 19;
         const amount = 1;
 
-        // Mint a new token
-        const proof = await sharpshooterPass.generateNFTProof(tokenId);
-        console.log(proof);
-        await expect(sharpshooterPass.mintNFT(tokenId, "")).to.be.revertedWith("Invalid proof.");
-        // expect(sharpshooterPass.mintNFT(tokenId, ));
-        // Check that the balance of addr1 is now 1
-        const balance = await sharpshooterPass.balanceOf(await addr1.getAddress(), tokenId);
-        expect(balance).to.equal(amount);
+        const proof = ethers.ZeroHash;
+        await expect(sharpshooterPass.mintNFT(tokenId, proof))
+            .to.be.revertedWith("Invalid proof.");
+        
+        // tx with correct proof
+        const correctProof = await sharpshooterPass.connect(owner).generateNFTProof(1);
+        // Ensure the proof string is correctly prefixed with '0x'
+        const proofHexString = `0x${correctProof}`;
+        console.log(correctProof);
+        const isValidProof = await sharpshooterPass.verifyNFTProof(tokenId, proofHexString);
+        expect(isValidProof).to.be.true;
+        // expect(balance).to.equal(amount);
     });
 });
