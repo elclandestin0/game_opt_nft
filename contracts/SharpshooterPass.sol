@@ -15,9 +15,8 @@ contract SharpshooterPass is ERC1155, Ownable {
     string public symbol = "SHARP";
 
     bytes32 private secretKey;
-    mapping(uint256 => uint256) private nonces;
 
-    constructor(string memory uri, bytes32 _secretKey) ERC1155(uri) {
+    constructor(address initialOwner, string memory uri, bytes32 _secretKey) ERC1155(uri) Ownable(initialOwner) {
         secretKey = _secretKey;
     }
 
@@ -29,9 +28,9 @@ contract SharpshooterPass is ERC1155, Ownable {
         _setURI(tokenURI);
     }
 
-    // Function to generate a stringified hash proof for a given tokenId
+    // Function to generate a more secure hash proof for a given tokenId
     function generateNFTProof(uint256 tokenId) public view onlyOwner returns (bytes32) {
-        return keccak256(abi.encodePacked(tokenId));
+        return keccak256(abi.encodePacked(tokenId, secretKey));
     }
 
     // Helper function to convert bytes32 to string
@@ -47,12 +46,9 @@ contract SharpshooterPass is ERC1155, Ownable {
 
     // Function to verify the NFT proof
     function verifyNFTProof(uint256 tokenId, bytes32 proof) public view returns (bool) {
-        bytes32 generatedProof = keccak256(abi.encodePacked(tokenId));
-        console.log(bytes32ToString(generatedProof));
-        console.log(bytes32ToString(proof));
+        bytes32 generatedProof = keccak256(abi.encodePacked(tokenId, secretKey));
         return generatedProof == proof;
     }
-
 
     function _generateArt(uint256 tokenId) internal view returns (string memory) {
         // Seed the pseudo-random generator

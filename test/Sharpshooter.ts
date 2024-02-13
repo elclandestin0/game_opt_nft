@@ -11,7 +11,7 @@ describe("SharpshooterPass", function () {
     beforeEach(async function () {
         [owner, addr1] = await ethers.getSigners();
         const SharpshooterPass = await ethers.getContractFactory("SharpshooterPass");
-        sharpshooterPass = SharpshooterPass.attach("0xf93b0549cD50c849D792f0eAE94A598fA77C7718");
+        sharpshooterPass = SharpshooterPass.attach("0xCA87833e830652C2ab07E1e03eBa4F2c246D3b58");
     });
 
     it("Should mint a new token if the signature is valid", async function () {
