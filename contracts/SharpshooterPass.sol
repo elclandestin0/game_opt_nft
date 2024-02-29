@@ -16,7 +16,7 @@ contract SharpshooterPass is ERC1155, Ownable {
 
     bytes32 private secretKey;
 
-    constructor(address initialOwneKOr, string memory uri, bytes32 _secretKey) ERC1155(uri) Ownable(initialOwner) {
+    constructor(address initialOwner, string memory uri, bytes32 _secretKey) ERC1155(uri) Ownable(initialOwner) {
         secretKey = _secretKey;
     }
 
